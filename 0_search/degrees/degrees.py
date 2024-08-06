@@ -94,6 +94,13 @@ def shortest_path(source, target):
     if source == target:
         return []
 
+    """
+    State represents a person. 
+    Action represents a "step" from one person to another
+    via a movie both co-starred in.
+    Parent of a node is the previous person for which we 
+    "stepped" to the current person.
+    """
     start = Node(state=source, parent=None, action=None)
     frontier = QueueFrontier()
     frontier.add(start)
@@ -109,6 +116,13 @@ def shortest_path(source, target):
                 
         explored.add(node.state)
 
+        """
+        Iterate through person's neighbors AKA co-stars
+        It target person is found, return path to target person.
+        If not found, and neighbor is unexplored and not already in frontier,
+        add neighbor to frontier, then continue to "explore" aka iterate through nodes
+        in this while loop.
+        """
         for movie_id, person_id in neighbors_for_person(node.state):
             if person_id == target:
                 actions = [(movie_id, person_id)]
@@ -122,6 +136,7 @@ def shortest_path(source, target):
             if not frontier.contains_state(person_id) and person_id not in explored:
                 child = Node(state=person_id, parent=node, action=(movie_id, person_id))
                 frontier.add(child)
+
 
 def person_id_for_name(name):
     """
